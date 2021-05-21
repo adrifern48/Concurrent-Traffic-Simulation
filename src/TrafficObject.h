@@ -16,7 +16,7 @@ enum ObjectType
 class TrafficObject
 {
 public:
-    // constructor / desctructor
+    // constructor / destructor
     TrafficObject();
     ~TrafficObject();
 
@@ -26,7 +26,7 @@ public:
     void getPosition(double &x, double &y);
     ObjectType getType() { return _type; }
 
-    // typical behaviour methods
+    // typical behavior methods
     virtual void simulate(){};
 
 protected:

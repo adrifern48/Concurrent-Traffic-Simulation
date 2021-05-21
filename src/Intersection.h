@@ -5,6 +5,7 @@
 #include <future>
 #include <mutex>
 #include <memory>
+
 #include "TrafficObject.h"
 #include "TrafficLight.h"
 
@@ -19,7 +20,7 @@ public:
     // getters / setters
     int getSize();
 
-    // typical behaviour methods
+    // typical behavior methods
     void pushBack(std::shared_ptr<Vehicle> vehicle, std::promise<void> &&promise);
     void permitEntryToFirstInQueue();
 
@@ -32,13 +33,13 @@ private:
 class Intersection : public TrafficObject
 {
 public:
-    // constructor / desctructor
+    // constructor
     Intersection();
 
     // getters / setters
     void setIsBlocked(bool isBlocked);
 
-    // typical behaviour methods
+    // typical behavior methods
     void addVehicleToQueue(std::shared_ptr<Vehicle> vehicle);
     void addStreet(std::shared_ptr<Street> street);
     std::vector<std::shared_ptr<Street>> queryStreets(std::shared_ptr<Street> incoming); // return pointer to current list of all outgoing streets
@@ -48,7 +49,7 @@ public:
 
 private:
 
-    // typical behaviour methods
+    // typical behavior methods
     void processVehicleQueue();
 
     // private members

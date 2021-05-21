@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <chrono>
+
 #include "TrafficObject.h"
 
 // init static variable

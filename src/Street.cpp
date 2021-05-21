@@ -1,8 +1,8 @@
 #include <iostream>
+
 #include "Vehicle.h"
 #include "Intersection.h"
 #include "Street.h"
-
 
 Street::Street()
 {
