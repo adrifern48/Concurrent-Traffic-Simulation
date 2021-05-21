@@ -15,9 +15,9 @@ T MessageQueue<T>::receive()
     std::unique_lock<std::mutex> uLock(_mutex);
     _condition.wait(uLock, [this] { return !_queue.empty(); });
     
-    // Remove last element from queue
-    T msg = _queue.back();
-    _queue.pop_back();
+    // Remove first element from queue
+    T msg = std::move(_queue.front());
+    _queue.pop_front();
 
     // Will not be copied due to Return Value Optimization (RVO) in C++
     return msg;
@@ -35,12 +35,12 @@ void MessageQueue<T>::send(T &&msg)
 
 /* Implementation of class "TrafficLight" */
 
-/*
+
 TrafficLight::TrafficLight()
 {
-    _currentPhase = TrafficLightPhase::red;
+    _currentPhase = TrafficLightPhase::RED;
 }
-*/
+
 void TrafficLight::waitForGreen()
 {
     // FP.5b : add the implementation of the method waitForGreen, in which an infinite while-loop 
@@ -51,16 +51,16 @@ void TrafficLight::waitForGreen()
         // receive wakes up when a new element is available in the queue
         auto msg = msgQueue.receive();
         
-        if ((TrafficLightPhase) msg == TrafficLightPhase::GREEN)
-            return;
+        if (TrafficLightPhase::GREEN == msg)
+            break;
     }
 }
-/*
+
 TrafficLightPhase TrafficLight::getCurrentPhase()
 {
     return _currentPhase;
 }
-*/
+
 void TrafficLight::simulate()
 {
     // FP.2b : Finally, the private method „cycleThroughPhases“ should be started in a thread when the public method „simulate“ is called. To do this, use the thread queue in the base class. 
@@ -79,14 +79,14 @@ void TrafficLight::cycleThroughPhases()
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> distrib(4000,6000);
     auto cycleDuration = distrib(gen);
-    auto t1 = std::chrono::system_clock::now();
+    auto t1 = std::chrono::high_resolution_clock::now();
 
     while (true)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        auto t2 = std::chrono::system_clock::now();
+        auto t2 = std::chrono::high_resolution_clock::now();
 
-        auto timeDelta = (std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t2)).count();
+        auto timeDelta = (std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)).count();
 
         if (timeDelta > cycleDuration)
         {
