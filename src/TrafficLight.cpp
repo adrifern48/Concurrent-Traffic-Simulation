@@ -17,7 +17,7 @@ T MessageQueue<T>::receive()
     
     // Remove first element from queue
     T msg = std::move(_queue.front());
-    _queue.pop_front();
+    _queue.clear(); // used to prevent spurious wake-ups
 
     // Will not be copied due to Return Value Optimization (RVO) in C++
     return msg;
@@ -29,7 +29,7 @@ void MessageQueue<T>::send(T &&msg)
     // FP.4a : The method send should use the mechanisms std::lock_guard<std::mutex> 
     // as well as _condition.notify_one() to add a new message to the queue and afterwards send a notification.
     std::lock_guard<std::mutex> lck(_mutex);
-    _queue.emplace_back(std::move(msg));
+    _queue.emplace_back(msg);
     _condition.notify_one();
 }
 
@@ -77,7 +77,7 @@ void TrafficLight::cycleThroughPhases()
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> distrib(4000,6000);
+    std::uniform_int_distribution<> distrib(4000,6000);
     auto cycleDuration = distrib(gen);
     auto t1 = std::chrono::high_resolution_clock::now();
 
@@ -88,7 +88,7 @@ void TrafficLight::cycleThroughPhases()
 
         auto timeDelta = (std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)).count();
 
-        if (timeDelta > cycleDuration)
+        if (timeDelta >= cycleDuration)
         {
             _currentPhase = _currentPhase == TrafficLightPhase::RED ? TrafficLightPhase::GREEN : TrafficLightPhase::RED;
             msgQueue.send(std::move(_currentPhase));
