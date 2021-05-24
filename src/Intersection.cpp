@@ -85,12 +85,12 @@ void Intersection::addVehicleToQueue(std::shared_ptr<Vehicle> vehicle)
     ftrVehicleAllowedToEnter.wait();
     lck.lock();
 
-    while (TrafficLightPhase::RED == _trafficLight.getCurrentPhase())
-        _trafficLight.waitForGreen();
-
     std::cout << "Intersection #" << _id << ": Vehicle #" << vehicle->getID() << " is granted entry." << std::endl;
 
     lck.unlock();
+
+    while (TrafficLightPhase::RED == _trafficLight.getCurrentPhase())
+        _trafficLight.waitForGreen();
 }
 
 void Intersection::vehicleHasLeft(std::shared_ptr<Vehicle> vehicle)

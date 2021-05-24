@@ -41,9 +41,7 @@ void TrafficLight::waitForGreen()
     while (true)
     {
         // receive wakes up when a new element is available in the queue
-        auto msg = msgQueue.receive();
-        
-        if (TrafficLightPhase::GREEN == msg)
+        if (TrafficLightPhase::GREEN == msgQueue.receive())
             break;
     }
 }
